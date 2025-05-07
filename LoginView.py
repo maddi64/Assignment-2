@@ -88,7 +88,7 @@ class LoginView:
         self.loginBtn.grid(row=0, column=0, sticky='ew')
         self.loginBtn['state'] = 'disabled'
 
-        exitBtn = Utils.button(frame, "Exit")
+        exitBtn = Utils.button(frame, "Exit", lambda: self.root.quit())
         exitBtn.grid(row=0, column=1, sticky='ew')
 
     def on_customer_input(self, event=None):
@@ -138,11 +138,18 @@ class LoginView:
     def customer_login(self):
         customer_window = Utils.top_level("Customer View")
         user = self.users.validate_customer(self.usernameTxt.get().strip(), self.emailTxt.get().strip())
+        self.root.withdraw()  # Hide login window
         CustomerDashboardView(customer_window, self.adoption_centre.animals, user)
+        customer_window.bind("<<DashboardClosed>>", lambda e: self.on_dashboard_close())
 
     def manager_login(self):
         manager_window = Utils.top_level("Manager View")
+        self.root.withdraw()  # Hide login window
         ManagerDashboardView(manager_window, self.adoption_centre.animals)
+        manager_window.bind("<<DashboardClosed>>", lambda e: self.on_dashboard_close())
+
+    def on_dashboard_close(self):
+        self.root.deiconify()  # Show login window again
 
 if __name__ == '__main__':
     root = Utils.root()  # Should return a Tk() instance

@@ -64,8 +64,12 @@ class CustomerDashboardView:
         adoptBtn = Utils.button(frame, "Adopt", self.adopt)
         adoptBtn.grid(row=0, column=1, sticky='ew')
 
-        closeBtn = Utils.button(frame, "Close", lambda: self.root.destroy())
+        closeBtn = Utils.button(frame, "Close", self.close_dashboard)
         closeBtn.grid(row=0, column=2, sticky='ew')
+
+    def close_dashboard(self):
+        self.root.event_generate("<<DashboardClosed>>")
+        self.root.destroy()
 
     def open_customer_details_view(self):
         customer_details_window = Utils.top_level("Customer Details View")

@@ -3,7 +3,6 @@ from tkinter import ttk
 from PIL import Image
 from PIL import ImageTk
 
-#You will never have to manually call this
 class ObservableButton(Button):
     def __init__(self, root, text, callback, main_color, hover_color):
         Button.__init__(self, root, text=text, command=callback, background=main_color, padx=0, relief=FLAT,
@@ -33,17 +32,15 @@ class Utils:
         window = Tk()
         window.resizable(False, False)
         window.title("Login")
+        window.protocol("WM_DELETE_WINDOW", Utils.disable)
         return window
 
-
-    #Some operating systems struggle to automatically stretch the window
-    #If needed, pass in a manual height and uncomment line 46
     @staticmethod
     def top_level(title_, height=0):
         tl = Toplevel()
         tl.resizable(False, False)
         tl.title(title_)
-        # tl.geometry(f"{Utils.width}x{height}")
+        tl.protocol("WM_DELETE_WINDOW", Utils.disable)
         return tl
 
     @staticmethod

@@ -96,8 +96,12 @@ class ManagerDashboardView:
         addAnimalBtn = Utils.button(frame, "Add Animal", self.add_animal)
         addAnimalBtn.grid(row=0, column=1, sticky='ew')
 
-        closeBtn = Utils.button(frame, "Close", lambda: self.root.destroy())
+        closeBtn = Utils.button(frame, "Close", self.close_dashboard)
         closeBtn.grid(row=0, column=2, sticky='ew')
+
+    def close_dashboard(self):
+        self.root.event_generate("<<DashboardClosed>>")
+        self.root.destroy()
 
     def add_animal(self):
         add_animal_window = Utils.top_level("Add Animal")
