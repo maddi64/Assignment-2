@@ -8,14 +8,17 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'model'))
 from tkinter import *
 from CustomerDashboardView import CustomerDashboardView
 from ManagerDashboardView import ManagerDashboardView
+from ErrorView import ErrorView
 from model.User import User
 from model.Users import Users
+from model.AdoptionCentre import AdoptionCentre
 from Utils import Utils  
 
 class LoginView:    
     def __init__(self, root):
         self.root = root 
-        self.users = Users()
+        self.adoption_centre = AdoptionCentre()
+        self.users = self.adoption_centre.get_users()
         self.content()
 
     def content(self):
@@ -51,9 +54,11 @@ class LoginView:
         
         self.usernameTxt = Entry(frame, relief=FLAT)
         self.usernameTxt.grid(row=0, column=1)
+        self.usernameTxt.bind('<KeyRelease>', self.on_customer_input)
         
         self.emailTxt = Entry(frame, relief=FLAT)
         self.emailTxt.grid(row=1, column=1)
+        self.emailTxt.bind('<KeyRelease>', self.on_customer_input)
 
         separator2 = Utils.separator(self.root)
         separator2.pack(fill='x')
@@ -67,10 +72,10 @@ class LoginView:
 
         self.managerTxt = Entry(frame, relief=FLAT)
         self.managerTxt.grid(row=0, column=1)
+        self.managerTxt.bind('<KeyRelease>', self.on_manager_input)
 
         separator2 = Utils.separator(self.root)
         separator2.pack(fill='x')
-        
 
     def setup_buttons(self):
         frame = Utils.frame(self.root)
@@ -79,33 +84,64 @@ class LoginView:
         frame.grid_columnconfigure(0, weight=1)
         frame.grid_columnconfigure(1, weight=1)
 
-        loginBtn = Utils.button(frame, "Login", self.handle_login)
-        loginBtn.grid(row=0, column=0, sticky='ew')
+        self.loginBtn = Utils.button(frame, "Login", self.handle_login)
+        self.loginBtn.grid(row=0, column=0, sticky='ew')
+        self.loginBtn['state'] = 'disabled'
 
         exitBtn = Utils.button(frame, "Exit")
         exitBtn.grid(row=0, column=1, sticky='ew')
+
+    def on_customer_input(self, event=None):
+        username = self.usernameTxt.get().strip()
+        email = self.emailTxt.get().strip()
+        
+        if username or email:
+            self.managerTxt.config(state='disabled')
+            self.loginBtn['state'] = 'normal' if username and email else 'disabled'
+        else:
+            self.managerTxt.config(state='normal')
+            self.loginBtn['state'] = 'disabled'
+
+    def on_manager_input(self, event=None):
+        manager_id = self.managerTxt.get().strip()
+        
+        if manager_id:
+            self.usernameTxt.config(state='disabled')
+            self.emailTxt.config(state='disabled')
+            self.loginBtn['state'] = 'normal'
+        else:
+            self.usernameTxt.config(state='normal')
+            self.emailTxt.config(state='normal')
+            self.loginBtn['state'] = 'disabled'
         
     def handle_login(self):
         username = self.usernameTxt.get().strip()
         email = self.emailTxt.get().strip()
         managerid = self.managerTxt.get().strip()
 
-
-        if not username and not email:
-            user = self.users.validate_manager(managerid)
-
-        else:
-            self.customer_login()
+        if managerid:
+            try:
+                user = self.users.validate_manager(managerid)
+                if user:
+                    self.manager_login()
+            except Exception as e:
+                error_window = Utils.top_level("Error")
+                ErrorView(error_window)
+        elif username and email:
+            user = self.users.validate_customer(username, email)
+            if user:
+                self.customer_login()
+            else:
+                error_window = Utils.top_level("Error")
+                ErrorView(error_window)
 
     def customer_login(self):
         customer_window = Utils.top_level("Customer View")
-        CustomerDashboardView(customer_window)
+        CustomerDashboardView(customer_window, self.adoption_centre.animals)
 
     def manager_login(self):
-        
         manager_window = Utils.top_level("Manager View")
-        ManagerDashboardView(manager_window)
-
+        ManagerDashboardView(manager_window, self.adoption_centre.animals)
 
 if __name__ == '__main__':
     root = Utils.root()  # Should return a Tk() instance
