@@ -8,7 +8,6 @@ from model.AdoptionCentre import AdoptionCentre
 class ManagerDashboardView:
     def __init__(self, root, animals):
         self.root = root
-        self.adoption_centre = AdoptionCentre()
         self.animals = animals
         self.content()
 
@@ -102,8 +101,9 @@ class ManagerDashboardView:
 
     def add_animal(self):
         add_animal_window = Utils.top_level("Add Animal")
-        AddAnimalView(add_animal_window, self.adoption_centre.animals)
+        AddAnimalView(add_animal_window, self.animals)
 
     def view_users(self):
+        adoption_centre = AdoptionCentre()
         view_users_window = Utils.top_level("View User List")
-        UserListView(view_users_window, self.adoption_centre.users)
+        UserListView(view_users_window, adoption_centre.users)

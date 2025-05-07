@@ -137,7 +137,8 @@ class LoginView:
 
     def customer_login(self):
         customer_window = Utils.top_level("Customer View")
-        CustomerDashboardView(customer_window, self.adoption_centre.animals)
+        user = self.users.validate_customer(self.usernameTxt.get().strip(), self.emailTxt.get().strip())
+        CustomerDashboardView(customer_window, self.adoption_centre.animals, user)
 
     def manager_login(self):
         manager_window = Utils.top_level("Manager View")

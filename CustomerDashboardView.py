@@ -2,11 +2,13 @@ from tkinter import *
 from Utils import Utils
 from DetailsView import DetailsView
 from model.Animals import Animals
+from model.AdoptionCentre import AdoptionCentre
 
 class CustomerDashboardView:
-    def __init__(self, root, animals):
+    def __init__(self, root, animals, customer=None):
         self.root = root  
         self.animals = animals
+        self.customer = customer
         self.content()
 
     def content(self):
@@ -67,7 +69,19 @@ class CustomerDashboardView:
 
     def open_customer_details_view(self):
         customer_details_window = Utils.top_level("Customer Details View")
-        DetailsView(customer_details_window)
+        DetailsView(customer_details_window, self.customer)
 
     def adopt(self):
-        pass
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
+            
+        item = self.tree.item(selected_item[0])
+        animal_name = item['values'][0]
+        
+        animal = self.animals.animal(animal_name)
+        if animal and not animal.is_already_adopted():
+            if self.customer.can_adopt(animal):
+                animal.adopt()
+                self.customer.get_adopted_animals().add(animal)
+                self.tree.delete(selected_item)
