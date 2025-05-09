@@ -59,9 +59,6 @@ class AddAnimalView:
         self.AgeTxt = Entry(frame, relief=FLAT)
         self.AgeTxt.grid(row=3, column=1)
 
-        separator2 = Utils.separator(self.root)
-        separator2.pack(fill='x')
-
     def setup_buttons(self):
         frame = Utils.frame(self.root)
         frame.pack(fill='x')

@@ -89,15 +89,19 @@ class ManagerDashboardView:
         frame.grid_columnconfigure(0, weight=1)
         frame.grid_columnconfigure(1, weight=1)
         frame.grid_columnconfigure(2, weight=1)
+        frame.grid_columnconfigure(3, weight=1)
 
-        viewUsersBtn = Utils.button(frame, "View Users", self.view_users)
+        viewUsersBtn = Utils.button(frame, "User List", self.view_users)
         viewUsersBtn.grid(row=0, column=0, sticky='ew')
 
-        addAnimalBtn = Utils.button(frame, "Add Animal", self.add_animal)
+        addAnimalBtn = Utils.button(frame, "Add", self.add_animal)
         addAnimalBtn.grid(row=0, column=1, sticky='ew')
 
+        removeAnimalBtn = Utils.button(frame, "Remove", self.remove_animal)
+        removeAnimalBtn.grid(row=0, column=2, sticky='ew')
+
         closeBtn = Utils.button(frame, "Close", self.close_dashboard)
-        closeBtn.grid(row=0, column=2, sticky='ew')
+        closeBtn.grid(row=0, column=3, sticky='ew')
 
     def close_dashboard(self):
         self.root.event_generate("<<DashboardClosed>>")
@@ -105,9 +109,32 @@ class ManagerDashboardView:
 
     def add_animal(self):
         add_animal_window = Utils.top_level("Add Animal")
-        AddAnimalView(add_animal_window, self.animals)
+        AddAnimalView(add_animal_window, self.animals, self)
+
+    def remove_animal(self):
+        selected_item = self.tree.selection()
+        if not selected_item:
+            return
+            
+        item = self.tree.item(selected_item[0])
+        animal_name = item['values'][0]
+        
+        animal = self.animals.animal(animal_name)
+        if animal:
+            self.animals.remove(animal)
+            self.tree.delete(selected_item)
 
     def view_users(self):
         adoption_centre = AdoptionCentre()
         view_users_window = Utils.top_level("View User List")
         UserListView(view_users_window, adoption_centre.users)
+
+    def refresh_animal_list(self):
+        self.tree.delete(*self.tree.get_children())
+        for animal in self.animals.get_animals():
+            self.tree.insert("", END, values=(
+                animal.get_name(),
+                type(animal).__name__,
+                animal.age,
+                "Adopted" if animal.is_already_adopted() else "Available"
+            ))

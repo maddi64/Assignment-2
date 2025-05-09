@@ -26,8 +26,7 @@ class CustomerDashboardView:
     def setup_label(self):
         separator1 = Utils.separator(self.root)
         separator1.pack(fill='x')  
-        applicationTitle = "Welcome to the Adoption Centre"
-        header = Utils.label(self.root, applicationTitle)
+        header = Utils.label(self.root, f"Welcome {self.customer.get_first_name()}")
         header.pack(pady=20)
         separator2 = Utils.separator(self.root)
         separator2.pack(fill='x')

@@ -32,19 +32,21 @@ class DetailsView:
         separator3.pack(fill='x')
 
     def setup_adopted_animals(self):
-        list_frame = Utils.frame(self.root)
-        list_frame.pack(fill='both', expand=True)
+        frame = Utils.frame(self.root)
+        frame.pack(pady=20, fill='both', expand=True)
+        
+        self.tree = Utils.treeview(frame, [""], multi=False)
+        self.tree["show"] = ""  # Hide the header
         
         adopted_animals = self.customer.get_adopted_animals().get_animals()
         if adopted_animals:
             for animal in adopted_animals:
-                animal_label = Label(list_frame, 
-                                   text=f"{animal.get_name()} ({type(animal).__name__}, Age: {animal.age})")
-                animal_label.pack(fill='x', pady=2)
+                self.tree.insert("", END, values=(str(animal),))
         else:
-            no_animals_label = Label(list_frame,
-                                   text="No animals adopted yet")
-            no_animals_label.pack(fill='x', pady=2)
+            # Center the "No animals adopted" message
+            self.tree.insert("", END, values=("No animals adopted",))
+        
+        self.tree.pack(fill='both', expand=True)
 
     def setup_buttons(self):
         frame = Utils.frame(self.root)

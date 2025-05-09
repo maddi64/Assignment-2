@@ -2,6 +2,7 @@ from tkinter import *
 from Utils import Utils
 from model.Users import Users
 from model.Customer import Customer
+from model.Manager import Manager
 
 class UserListView:
     def __init__(self, root, users):
@@ -26,28 +27,42 @@ class UserListView:
         separator1.pack(fill='x')  
         header = Utils.label(self.root, "User List")
         header.pack(pady=20)
-        separator2 = Utils.separator(self.root)
-        separator2.pack(fill='x')
 
     def setup_user_list(self):
         frame = Utils.frame(self.root)
         frame.pack(fill='both', expand=True)
         
-        listbox_frame = Frame(frame)
-        listbox_frame.pack(fill='both', expand=True, padx=20)
-        
+        self.tree = Utils.treeview(frame, [""], multi=False)
+        self.tree["show"] = "" 
+
         for user in self.users.get_users():
-            user_frame = Frame(listbox_frame)
-            user_frame.pack(fill='x', pady=2)
+            if user.__class__.__name__ == "Customer":
+                self.tree.insert("", END, values=(
+                    f"{user.get_name()} ({user.get_email()})",
+                    "Customer"
+                ))
+            elif user.__class__.__name__ == "Manager":
+                self.tree.insert("", END, values=(
+                    user.get_name(),
+                    "Manager"
+                ))
+        
+        self.tree.pack(fill='both', expand=True)
+
+
+        # listbox_frame = Frame(frame)
+        # listbox_frame.pack(fill='both', expand=True, padx=20)
+        
+        # for user in self.users.get_users():
+        #     user_frame = Frame(listbox_frame)
+        #     user_frame.pack(fill='x', pady=2)
             
-            if isinstance(user, Customer):
-                user_text = f"{user.get_name()} ({user.get_email()})"
-            else:
-                user_text = f"{user.get_name()} (Manager)"
-                
-            user_label = Label(user_frame, 
-                             text=user_text)
-            user_label.pack(fill='x') 
+        #     if user.__class__.__name__ == "Customer":
+        #         user_label = Label(user_frame, text=f"{user.get_name()} ({user.get_email()})")
+        #         user_label.pack(fill='x')
+        #     elif user.__class__.__name__ == "Manager":
+        #         user_label = Label(user_frame, text=f"{user.get_name()} (Manager)")
+        #         user_label.pack(fill='x')
 
     def setup_buttons(self):
         frame = Utils.frame(self.root)

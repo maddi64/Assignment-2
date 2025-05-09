@@ -74,9 +74,6 @@ class LoginView:
         self.managerTxt.grid(row=0, column=1)
         self.managerTxt.bind('<KeyRelease>', self.on_manager_input)
 
-        separator2 = Utils.separator(self.root)
-        separator2.pack(fill='x')
-
     def setup_buttons(self):
         frame = Utils.frame(self.root)
         frame.pack(fill='x')
@@ -138,20 +135,20 @@ class LoginView:
     def customer_login(self):
         customer_window = Utils.top_level("Customer View")
         user = self.users.validate_customer(self.usernameTxt.get().strip(), self.emailTxt.get().strip())
-        self.root.withdraw()  # Hide login window
+        self.root.withdraw()  
         CustomerDashboardView(customer_window, self.adoption_centre.animals, user)
         customer_window.bind("<<DashboardClosed>>", lambda e: self.on_dashboard_close())
 
     def manager_login(self):
         manager_window = Utils.top_level("Manager View")
-        self.root.withdraw()  # Hide login window
+        self.root.withdraw()  
         ManagerDashboardView(manager_window, self.adoption_centre.animals)
         manager_window.bind("<<DashboardClosed>>", lambda e: self.on_dashboard_close())
 
     def on_dashboard_close(self):
-        self.root.deiconify()  # Show login window again
+        self.root.deiconify() 
 
 if __name__ == '__main__':
-    root = Utils.root()  # Should return a Tk() instance
+    root = Utils.root()     
     LoginView(root)
     root.mainloop()
