@@ -1,8 +1,10 @@
 from tkinter import *
+from ErrorView import ErrorView
 from Utils import Utils
 from DetailsView import DetailsView
 from model.Animals import Animals
 from model.AdoptionCentre import AdoptionCentre
+from model.exception.InvalidOperationException import InvalidOperationException
 
 class CustomerDashboardView:
     def __init__(self, root, animals, customer=None):
@@ -48,6 +50,7 @@ class CustomerDashboardView:
                 ))
         
         self.tree.pack(fill='both', expand=True)
+        
                 
     def setup_buttons(self):
         frame = Utils.frame(self.root)
@@ -88,3 +91,9 @@ class CustomerDashboardView:
                 animal.adopt()
                 self.customer.get_adopted_animals().add(animal)
                 self.tree.delete(selected_item)
+            else:
+                try:
+                    raise InvalidOperationException("Cannot Adopt XX, adoption limit for YY reached")
+                except InvalidOperationException:
+                    error_window = Utils.top_level("Error")
+                    ErrorView(error_window)

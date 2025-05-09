@@ -43,7 +43,7 @@ class UserListView:
                 ))
             elif user.__class__.__name__ == "Manager":
                 self.tree.insert("", END, values=(
-                    user.get_name(),
+                    f"{user.get_name()} (Manager)",
                     "Manager"
                 ))
         

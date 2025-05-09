@@ -21,13 +21,14 @@ class ErrorView:
     def setup_err_label(self):
         separator1 = Utils.separator(self.root)
         separator1.pack(fill='x')  
-        header = Utils.label(self.root, "Invalid Credentials")
+        header = Utils.label(self.root, "InvalidOperationException")
         header.pack(pady=20)
 
     def setup_label(self):
         separator1 = Utils.separator(self.root)
         separator1.pack(fill='x')  
-        header = Utils.label(self.root, "Invalid Credentials")
+        #header = Utils.label(self.root, self.errMsg)
+        header = Utils.label(self.root, "Error Messahe")
         header.pack(pady=20)
 
     def setup_buttons(self):

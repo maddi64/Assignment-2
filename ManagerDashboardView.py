@@ -4,6 +4,8 @@ from model.Animals import Animals
 from AddAnimalView import AddAnimalView
 from UserListView import UserListView
 from model.AdoptionCentre import AdoptionCentre
+from model.exception.InvalidOperationException import InvalidOperationException
+from ErrorView import ErrorView
 
 class ManagerDashboardView:
     def __init__(self, root, animals):
@@ -121,8 +123,14 @@ class ManagerDashboardView:
         
         animal = self.animals.animal(animal_name)
         if animal:
-            self.animals.remove(animal)
-            self.tree.delete(selected_item)
+            try:
+                if animal.is_already_adopted():
+                    raise InvalidOperationException("Cannot remove an adopted animal")
+                self.animals.remove(animal)
+                self.tree.delete(selected_item)
+            except InvalidOperationException:
+                error_window = Utils.top_level("Error")
+                ErrorView(error_window)
 
     def view_users(self):
         adoption_centre = AdoptionCentre()
