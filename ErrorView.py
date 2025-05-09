@@ -2,8 +2,9 @@ from tkinter import *
 from Utils import Utils
 
 class ErrorView:
-    def __init__(self, root):
+    def __init__(self, root, error_message):
         self.root = root  
+        self.error_message = error_message
         self.content()
 
     def content(self):
@@ -21,14 +22,17 @@ class ErrorView:
     def setup_err_label(self):
         separator1 = Utils.separator(self.root)
         separator1.pack(fill='x')  
-        header = Utils.label(self.root, "InvalidOperationException")
+        print(self.error_message)
+        if self.error_message == "Invalid manager credentials":
+            header = Utils.label(self.root, "UnauthorizedAccessException")
+        else:
+            header = Utils.label(self.root, "InvalidOperationException")
         header.pack(pady=20)
 
     def setup_label(self):
         separator1 = Utils.separator(self.root)
         separator1.pack(fill='x')  
-        #header = Utils.label(self.root, self.errMsg)
-        header = Utils.label(self.root, "Error Messahe")
+        header = Utils.label(self.root, self.error_message)
         header.pack(pady=20)
 
     def setup_buttons(self):

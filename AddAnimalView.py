@@ -106,4 +106,4 @@ class AddAnimalView:
             
         except InvalidOperationException as e:
             error_window = Utils.top_level("Error")
-            ErrorView(error_window)
+            ErrorView(error_window, str(e))

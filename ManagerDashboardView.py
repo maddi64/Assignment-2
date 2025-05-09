@@ -128,9 +128,9 @@ class ManagerDashboardView:
                     raise InvalidOperationException("Cannot remove an adopted animal")
                 self.animals.remove(animal)
                 self.tree.delete(selected_item)
-            except InvalidOperationException:
+            except InvalidOperationException as e:
                 error_window = Utils.top_level("Error")
-                ErrorView(error_window)
+                ErrorView(error_window, str(e))
 
     def view_users(self):
         adoption_centre = AdoptionCentre()

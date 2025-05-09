@@ -37,20 +37,18 @@ class CustomerDashboardView:
         frame = Utils.frame(self.root)
         frame.pack(pady=20, fill='both', expand=True)
         
-        columns = ("Name", "Type", "Age", "Adoption Status")
+        columns = ("Animals",)
         self.tree = Utils.treeview(frame, columns)
         
         for animal in self.animals.get_animals():
             if not animal.is_already_adopted():
                 self.tree.insert("", END, values=(
-                    animal.get_name(),
-                    type(animal).__name__,
-                    animal.age,
-                    "Available"
+                    str(animal),
+                    type(animal).__name__  # Hidden column for type info
                 ))
         
         self.tree.pack(fill='both', expand=True)
-        
+        self.tree.bind('<<TreeviewSelect>>', self.on_select)
                 
     def setup_buttons(self):
         frame = Utils.frame(self.root)
@@ -63,11 +61,15 @@ class CustomerDashboardView:
         loginBtn = Utils.button(frame, "My Details", self.open_customer_details_view)
         loginBtn.grid(row=0, column=0, sticky='ew')
 
-        adoptBtn = Utils.button(frame, "Adopt", self.adopt)
-        adoptBtn.grid(row=0, column=1, sticky='ew')
+        self.adoptBtn = Utils.button(frame, "Adopt", self.adopt)
+        self.adoptBtn.grid(row=0, column=1, sticky='ew')
+        self.adoptBtn['state'] = 'disabled'  # Initially disabled
 
         closeBtn = Utils.button(frame, "Close", self.close_dashboard)
         closeBtn.grid(row=0, column=2, sticky='ew')
+
+    def on_select(self, event):
+        self.adoptBtn['state'] = 'normal' if self.tree.selection() else 'disabled'
 
     def close_dashboard(self):
         self.root.event_generate("<<DashboardClosed>>")
@@ -83,7 +85,8 @@ class CustomerDashboardView:
             return
             
         item = self.tree.item(selected_item[0])
-        animal_name = item['values'][0]
+        animal_name = item['values'][0].split(' (Age:')[0]  # Extract name from string representation
+        animal_type = item['values'][1]
         
         animal = self.animals.animal(animal_name)
         if animal and not animal.is_already_adopted():
@@ -92,8 +95,6 @@ class CustomerDashboardView:
                 self.customer.get_adopted_animals().add(animal)
                 self.tree.delete(selected_item)
             else:
-                try:
-                    raise InvalidOperationException("Cannot Adopt XX, adoption limit for YY reached")
-                except InvalidOperationException:
-                    error_window = Utils.top_level("Error")
-                    ErrorView(error_window)
+                error_msg = f"Cannot adopt {animal_name}, adoption limit for {animal_type} reached"
+                error_window = Utils.top_level("Error")
+                ErrorView(error_window, error_msg)

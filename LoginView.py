@@ -12,7 +12,9 @@ from ErrorView import ErrorView
 from model.User import User
 from model.Users import Users
 from model.AdoptionCentre import AdoptionCentre
-from Utils import Utils  
+from Utils import Utils
+from model.exception.UnauthorizedAccessException import UnauthorizedAccessException
+from model.exception.InvalidOperationException import InvalidOperationException
 
 class LoginView:    
     def __init__(self, root):
@@ -118,19 +120,26 @@ class LoginView:
 
         if managerid:
             try:
-                user = self.users.validate_manager(managerid)
-                if user:
-                    self.manager_login()
-            except Exception as e:
+                managerid = int(managerid)
+                try:
+                    user = self.users.validate_manager(managerid)
+                    if user:
+                        self.manager_login()
+                except:
+                    error_window = Utils.top_level("Error")
+                    ErrorView(error_window, "Invalid manager credentials")
+            except:
                 error_window = Utils.top_level("Error")
-                ErrorView(error_window)
+                ErrorView(error_window, "Manager ID must be an integer")   
+
         elif username and email:
             user = self.users.validate_customer(username, email)
             if user:
                 self.customer_login()
             else:
                 error_window = Utils.top_level("Error")
-                ErrorView(error_window)
+                ErrorView(error_window, "Invalid customer credentials")
+
 
     def customer_login(self):
         customer_window = Utils.top_level("Customer View")
