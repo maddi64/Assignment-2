@@ -130,7 +130,7 @@ class LoginView:
                     ErrorView(error_window, "Invalid manager credentials")
             except:
                 error_window = Utils.top_level("Error")
-                ErrorView(error_window, "Manager ID must be an integer")   
+                ErrorView(error_window, "Id must be an integer")   
 
         elif username and email:
             user = self.users.validate_customer(username, email)

@@ -24,15 +24,15 @@ class ErrorView:
         separator1.pack(fill='x')  
         print(self.error_message)
         if self.error_message == "Invalid manager credentials":
-            header = Utils.label(self.root, "UnauthorizedAccessException")
+            header = Label(self.root, text="UnauthorizedAccessException", font="Courier 14 bold", foreground="red")
         else:
-            header = Utils.label(self.root, "InvalidOperationException")
+            header = Label(self.root, text="InvalidOperationException", font="Courier 14 bold", foreground="red")
         header.pack(pady=20)
 
     def setup_label(self):
         separator1 = Utils.separator(self.root)
         separator1.pack(fill='x')  
-        header = Utils.label(self.root, self.error_message)
+        header = Label(self.root, text=self.error_message, font="Helvetica 10 bold", foreground=Utils.purple)
         header.pack(pady=20)
 
     def setup_buttons(self):

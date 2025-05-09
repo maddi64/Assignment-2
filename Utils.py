@@ -72,7 +72,16 @@ class Utils:
 
     @staticmethod
     def treeview(root, columns, multi=False):
-        tree = ttk.Treeview(root, show="headings", height=12, columns=columns, selectmode="extended" if multi else "browse")
+        style = ttk.Style()
+        style.configure("Custom.Treeview.Heading",
+                       background="grey",
+                       font=("Helvetica", 10, "bold"),
+                       foreground=Utils.purple)
+        
+        tree = ttk.Treeview(root, show="headings", height=10, columns=columns, 
+                           selectmode="extended" if multi else "browse",
+                           style="Custom.Treeview")
+        
         for column in tree["columns"]:
             tree.column(column, anchor=CENTER, width=int(Utils.width/len(columns)), stretch=NO)
         for i in range(len(columns)):

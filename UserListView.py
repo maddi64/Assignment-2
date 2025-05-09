@@ -32,8 +32,7 @@ class UserListView:
         frame = Utils.frame(self.root)
         frame.pack(fill='both', expand=True)
         
-        self.tree = Utils.treeview(frame, [""], multi=False)
-        self.tree["show"] = "" 
+        self.tree = Utils.treeview(frame, ["Users"], multi=False)
 
         for user in self.users.get_users():
             if user.__class__.__name__ == "Customer":

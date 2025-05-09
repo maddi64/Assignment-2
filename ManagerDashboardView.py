@@ -83,6 +83,7 @@ class ManagerDashboardView:
             ))
         
         self.tree.pack(fill='both', expand=True)
+        self.tree.bind('<<TreeviewSelect>>', self.on_select)
 
     def setup_buttons(self):
         frame = Utils.frame(self.root)
@@ -99,11 +100,15 @@ class ManagerDashboardView:
         addAnimalBtn = Utils.button(frame, "Add", self.add_animal)
         addAnimalBtn.grid(row=0, column=1, sticky='ew')
 
-        removeAnimalBtn = Utils.button(frame, "Remove", self.remove_animal)
-        removeAnimalBtn.grid(row=0, column=2, sticky='ew')
+        self.removeAnimalBtn = Utils.button(frame, "Remove", self.remove_animal)
+        self.removeAnimalBtn.grid(row=0, column=2, sticky='ew')
+        self.removeAnimalBtn['state'] = 'disabled'  # Initially disabled
 
         closeBtn = Utils.button(frame, "Close", self.close_dashboard)
         closeBtn.grid(row=0, column=3, sticky='ew')
+
+    def on_select(self, event):
+        self.removeAnimalBtn['state'] = 'normal' if self.tree.selection() else 'disabled'
 
     def close_dashboard(self):
         self.root.event_generate("<<DashboardClosed>>")

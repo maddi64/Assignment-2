@@ -37,8 +37,7 @@ class CustomerDashboardView:
         frame = Utils.frame(self.root)
         frame.pack(pady=20, fill='both', expand=True)
         
-        columns = ("Animals",)
-        self.tree = Utils.treeview(frame, columns)
+        self.tree = Utils.treeview(frame, ["Animals"], multi=False)
         
         for animal in self.animals.get_animals():
             if not animal.is_already_adopted():
