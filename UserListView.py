@@ -31,7 +31,7 @@ class UserListView:
 
     def setup_user_list(self):
         frame = Utils.frame(self.root)
-        frame.pack(pady=20, fill='both', expand=True)
+        frame.pack(fill='both', expand=True)
         
         listbox_frame = Frame(frame)
         listbox_frame.pack(fill='both', expand=True, padx=20)
@@ -46,16 +46,8 @@ class UserListView:
                 user_text = f"{user.get_name()} (Manager)"
                 
             user_label = Label(user_frame, 
-                             text=user_text,
-                             font="Helvetica 11",
-                             anchor='w',
-                             padx=10,
-                             pady=5)
-            user_label.pack(fill='x')
-            
-            # Add a light separator between users
-            separator = Frame(listbox_frame, height=1, bg='#e0e0e0')
-            separator.pack(fill='x', pady=1)
+                             text=user_text)
+            user_label.pack(fill='x') 
 
     def setup_buttons(self):
         frame = Utils.frame(self.root)

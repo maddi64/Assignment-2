@@ -22,30 +22,28 @@ class DetailsView:
     def setup_label(self):
         separator1 = Utils.separator(self.root)
         separator1.pack(fill='x')  
-        header = Utils.label(self.root, f"{self.customer.get_name()}'s Adopted Animals")
+        header = Utils.label(self.root, f"{self.customer.get_name()}")
         header.pack(pady=20)
         separator2 = Utils.separator(self.root)
         separator2.pack(fill='x')
+        header2 = Utils.label(self.root, "Adopted Animals")
+        header2.pack(pady=20)
+        separator3 = Utils.separator(self.root)
+        separator3.pack(fill='x')
 
     def setup_adopted_animals(self):
         list_frame = Utils.frame(self.root)
-        list_frame.pack(pady=20, padx=20, fill='both', expand=True)
+        list_frame.pack(fill='both', expand=True)
         
         adopted_animals = self.customer.get_adopted_animals().get_animals()
         if adopted_animals:
             for animal in adopted_animals:
                 animal_label = Label(list_frame, 
-                                   text=f"{animal.get_name()} ({type(animal).__name__}, Age: {animal.age})", 
-                                   font="Helvetica 12", 
-                                   anchor='w',
-                                   justify=LEFT)
+                                   text=f"{animal.get_name()} ({type(animal).__name__}, Age: {animal.age})")
                 animal_label.pack(fill='x', pady=2)
         else:
             no_animals_label = Label(list_frame,
-                                   text="No animals adopted yet",
-                                   font="Helvetica 12 italic",
-                                   anchor='w',
-                                   justify=LEFT)
+                                   text="No animals adopted yet")
             no_animals_label.pack(fill='x', pady=2)
 
     def setup_buttons(self):

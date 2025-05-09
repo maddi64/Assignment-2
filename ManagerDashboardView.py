@@ -44,11 +44,11 @@ class ManagerDashboardView:
         allBtn = Utils.filter_button(frame, "All", lambda: self.filter_animals("all"))
         allBtn.grid(row=0, column=0, sticky='ew')
 
-        dogBtn = Utils.filter_button(frame, "Dog", lambda: self.filter_animals("Dog"))
-        dogBtn.grid(row=0, column=1, sticky='ew')
-
         catBtn = Utils.filter_button(frame, "Cat", lambda: self.filter_animals("Cat"))
-        catBtn.grid(row=0, column=2, sticky='ew')
+        catBtn.grid(row=0, column=1, sticky='ew')
+
+        dogBtn = Utils.filter_button(frame, "Dog", lambda: self.filter_animals("Dog"))
+        dogBtn.grid(row=0, column=2, sticky='ew')
 
         rabbitBtn = Utils.filter_button(frame, "Rabbit", lambda: self.filter_animals("Rabbit"))
         rabbitBtn.grid(row=0, column=3, sticky='ew')
